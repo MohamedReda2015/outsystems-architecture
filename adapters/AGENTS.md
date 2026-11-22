@@ -15,3 +15,5 @@ This workspace follows the **outsystems-architecture** skill. If the folder is n
 
 Project-specific architecture decisions (if any) are recorded here and override the house standard:
 - <none yet>
+
+- Use `references/verification-and-reliability.md` for evidence and domain acceptance checks. Distinguish prepared, validated, merged, published and runtime verified; preserve task scope and existing authorization.

@@ -28,6 +28,9 @@ jobs:
       - name: Validator regression (Node)
         run: node scripts/test_validator.mjs
 
+      - name: Dependency semantics and input validation
+        run: python tests/test_validator.py -v
+
       - name: Python and Node validators produce identical output
         run: |
           set -u

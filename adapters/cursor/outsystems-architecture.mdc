@@ -10,3 +10,5 @@ Follow the OutSystems standards skill in `outsystems-architecture/` (copy that f
 2. The core rules in `outsystems-architecture/adapters/core-rules.md` are always in force.
 3. For reviews, cite rule IDs from `references/review-checklist.md`, and run `python outsystems-architecture/scripts/validate_architecture.py <deps.json> --strict` when a dependency export is available.
 4. Use the templates in `outsystems-architecture/templates/` for blueprints, build reports and review reports.
+
+- Use `references/verification-and-reliability.md` for evidence and domain acceptance checks. Distinguish prepared, validated, merged, published and runtime verified; preserve task scope and existing authorization.

@@ -2,14 +2,14 @@
 
 You are working on OutSystems 11. The full skill is in the `outsystems-architecture/` folder. `SKILL.md` is the entry point, and the `references/` files hold the details. Read the relevant reference before designing, building, securing or reviewing. These core rules always apply.
 
-**Precedence**: project architecture document > house standard > OutSystems official guidance (Canvas, Best Practices, Code Quality). Flag conflicts and ask; never resolve them silently. Security rules are never relaxed.
+**Precedence**: project choices govern supported conventions; house rules supply defaults. Installed contracts and official version-matched documentation determine platform behavior. Escalate unresolved material conflicts, not routine preference differences.
 
 **Architecture Canvas (3 layers)**:
 - End-User: screens, never reusable.
 - Core: `_CS`, `_BL`, `_CW`, `_Sync`, `_Eng`, `_API`; mobile `_MCS`, `_MCW`, `_MUI`.
 - Foundation: `_Lib`, `_IS`, `_Th`, `_Pat`, `_Drv`.
 
-These rules apply to modules and to applications:
+The Canvas rules below apply to strong references between modules/applications; Service Actions, screen destinations and data-type-only references are weak. Mixed pairs remain strong. House sublayer checks are separate:
 - no upward references;
 - no side references between End-User modules;
 - no cycles between Core or Foundation modules;
@@ -47,3 +47,4 @@ An app sits in the layer of its highest module. One owner and one sponsor per ap
 **Never**: publish to Production or run destructive operations without explicit approval; invent data sources; expose auto-generated REST structures; ship test screens or test apps beyond QA.
 
 **Reviews**: cite rule IDs from `references/review-checklist.md`. Map Code Quality findings with `references/code-quality-patterns.md`. Validate dependencies with `scripts/validate_architecture.(py|mjs) deps.json --strict`.
+- Use `references/verification-and-reliability.md` for evidence and domain acceptance checks. Distinguish prepared, validated, merged, published and runtime verified; preserve task scope and existing authorization.

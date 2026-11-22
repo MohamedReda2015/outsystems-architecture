@@ -9,7 +9,7 @@ Read 2026-11-22. **O** = official OutSystems documentation or OutSystems-owned; 
 | OutSystems Platform Best Practices (naming, coding, DB, queries, architecture, teamwork, logic, security, performance) | https://success.outsystems.com/documentation/11/onboarding_developers/outsystems_platform_best_practices/ | module-standard, data-and-logic, performance, lifecycle-and-sop |
 | Best practices for reactive web security (Aug 2026) | https://success.outsystems.com/documentation/11/security_and_compliance/best_practices_for_reactive_web_security/ | security |
 | Code analysis patterns (Code Quality, formerly AI Mentor Studio; Aug 2026) | https://success.outsystems.com/documentation/11/monitoring_and_troubleshooting_apps/manage_technical_debt/code_analysis_patterns/ | code-quality-patterns, review-checklist, security, performance, ui-standards |
-| Use Services to Expose Functionality (Service vs Server Actions; mirror of the official text) | https://testsssssss.readthedocs.io/en/latest/develop/reuse-and-refactor/services/ | data-and-logic |
+| Use Services to Expose Functionality (official) | https://success.outsystems.com/documentation/11/building_apps/reusing_and_refactoring/use_services_to_expose_functionality/ | data-and-logic |
 | 8 Best Practices for Building a Reactive Web App (OutSystems blog, MVP author) | https://www.outsystems.com/blog/posts/best-practices-reactive-web-app/ | ui-standards, security |
 | BDDFramework (Forge) / BDD testing guide | https://www.outsystems.com/forge/component-overview/1201/bddframework-o11 · https://www.outsystems.com/blog/posts/intro-bddframework-testing/ | lifecycle-and-sop |
 | outsystems-pipeline (CI/CD with the LifeTime API) | https://github.com/OutSystems/outsystems-pipeline (wiki) | lifecycle-and-sop |
@@ -32,3 +32,8 @@ Read 2026-11-22. **O** = official OutSystems documentation or OutSystems-owned; 
 ## Not verified / open
 - The full text of the official "Apply a hotfix" and "Deployment plans" pages was not retrieved. The hotfix SOP is based on official best-practice bullets and community threads.
 - The Code Quality "monolithic module" thresholds are not published. The 4 MB and 20-site-property signals come from the Platform Best Practices page.
+
+
+## Reliability review — 2026-11-22
+
+See [verification and reliability](../references/verification-and-reliability.md) for primary sources, provenance and acceptance cases. Platform facts are separated from house policy and anonymized project observations. A community mirror is not an official publication; installed contracts and version-matched official sources take precedence. Runtime claims were not retested in a live tenant during this documentation review.

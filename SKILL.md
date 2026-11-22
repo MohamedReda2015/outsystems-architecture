@@ -1,31 +1,36 @@
 ---
 name: outsystems-architecture
-description: OutSystems 11 (O11) development standards, architecture rules, SOPs and review checklist — the 3-layer Architecture Canvas (End-User / Core / Foundation), the house 4-module pattern (Front_End → CW → BL → CS), module naming suffixes (_CS, _BL, _CW, _IS, _Sync, _Th, _Lib, _MCW...), Reactive/Mobile security, integration and caching patterns, data/logic/UI/performance rules, the official Code Quality (AI Mentor Studio) patterns, LifeTime deployment/hotfix/testing SOPs, and lessons learned from real projects. Use this skill whenever the task involves designing, building, refactoring, reviewing, securing, deploying or explaining an OutSystems application, module, entity, server/service action, block, screen, timer, integration, dependency or Code Quality / TrueChange finding — including work through Service Studio, the Service Studio MCP / Model API, or plain advice — even if the user does not say "standards" or "architecture".
+description: Design, review and evolve OutSystems 11 application architecture, module boundaries, dependencies, deployment and verification. Distinguishes official Architecture Canvas rules from the house FE/CW/BL/CS pattern. Use for O11 architecture or cross-module changes; use domain skills for implementation details and ODC guidance for ODC.
 license: MIT
 metadata:
   version: 2.0.0
-  updated: 2026-11-22
+  updated: "2026-11-22"
   platform: OutSystems 11 (Reactive Web, Mobile, Traditional Web)
-  agent-independent: true
+  agent-independent: "true"
 ---
 
 # OutSystems-Architecture
+
+## Scope, evidence and consistency
+
+- Run bundled scripts from the skill directory or use absolute paths; do not assume they exist in the application checkout.
+- Establish O11/ODC, application type, installed component versions and the target environment from available evidence; ask only for information that changes the work.
+- Separate **platform facts**, **house defaults**, **project decisions** and **observed lessons**. Project conventions choose among supported designs; they cannot change runtime behavior. The FE/CW/BL/CS chain is an O11 house pattern, not an ODC requirement.
+- Preserve the user's requested scope and existing authorization. Continue routine reversible work; a skill does not authorize publishing, dependency changes or production operations beyond that scope. Do not introduce phase-by-phase approval unless the user or environment requires it.
+- Prefer installed API signatures and version-matched official documentation. A repository development branch, community workaround or old project observation is evidence to investigate, not a release guarantee.
+- Report evidence separately: **prepared → model validated → merged → published → runtime verified**. A static checker passing proves only its covered checks on the supplied inventory. Unknown, blocked and not tested remain explicit.
+- Read [verification and reliability](references/verification-and-reliability.md) when changing data contracts, concurrent operations, runtime behavior or verification. It contains the concrete acceptance checks and sources for this skill.
+
 
 This skill makes an agent design, build, secure, deploy and review OutSystems 11 software the way a senior OutSystems architect would. It covers correct layering, clean dependencies, predictable naming, a secure Reactive design, and the patterns and SOPs that keep applications fast and independently deployable. It is written for any agent (Claude, Copilot, Cursor, Codex, a custom LLM agent, or a human), so it relies on plain Markdown and one optional script (Python or Node).
 
 ## Why this matters
 
-An OutSystems factory grows into dozens of apps and hundreds of modules with different owners and release cadences. The platform deploys **applications** as a unit, and every **strong reference** pulls its producer into the consumer's deployment. Wrong layering forces unrelated apps to be deployed together and creates cycles that block publishing. In Reactive and Mobile apps, **every aggregate and server action the client calls becomes a REST endpoint** that users can call with any input they like. Almost every rule below protects *lifecycle independence* or *server-side trust*.
+An OutSystems factory grows into dozens of apps and hundreds of modules with different owners and release cadences. LifeTime plans application deployments while Service Studio publishes modules. Strong references couple producer changes to consumer refresh/republication; impact analysis determines what a particular deployment needs. Wrong layering forces unrelated apps to be deployed together and creates cycles that block publishing. In Reactive and Mobile apps, **every aggregate and server action the client calls becomes a REST endpoint** that users can call with any input they like. Almost every rule below protects *lifecycle independence* or *server-side trust*.
 
-## Precedence of rules
+## Applying conventions
 
-When rules disagree, apply them in this order and say which one you used:
-
-1. **The project's own written architecture** (a blueprint, an AGENTS.md decision, a prompt file, or what the user states for this project).
-2. **The house standard** in this skill (strict 4-module pattern, section 2).
-3. **OutSystems official guidance**: the Architecture Canvas, Platform Best Practices, and Code Quality patterns. Community conventions only fill the gaps.
-
-If (1) conflicts with (2), don't silently "fix" modules that are already built, and don't silently ignore the house standard either. Point out the conflict and ask which one wins for this project. **Security rules (section 4, SEC-\*) are never relaxed by precedence.** Flag the risk even if a project document allows it.
+Use the project's documented architecture, naming and design choices where supported. Use this skill's house defaults when the project has no decision. Official documentation and installed contracts determine platform behavior; house preferences never override those facts. Record a consequential deviation and its reason. Escalate unresolved security, data-integrity or compatibility conflicts, not ordinary naming or layout choices.
 
 ## 1. The Architecture Canvas (official, 3 layers)
 
@@ -37,7 +42,7 @@ If (1) conflicts with (2), don't silently "fix" modules that are already built, 
 
 O11 has no Orchestration layer: screen destinations are weak references. Classify every module in **Discovery** so Code Quality can validate it.
 
-**Validation rules (modules and applications)**:
+**Canvas validation rules apply to strong references** (modules and applications). Weak Service Actions and screen destinations are excluded from these graph violations; still review their contracts and operational coupling:
 - **R1. No upward references.**
 - **R2. No side references between End-User modules.** Move the shared element down: to Core if it is business-related, to a Library if it is not.
 - **R3. No cycles** among Core or Foundation modules.
@@ -105,7 +110,7 @@ Write the result with `templates/architecture-blueprint.md`.
 6. Report only what you verified in the platform. "Implemented" means it exists and validates, not that you wrote code for it.
 7. Meet the Definition of Done (`references/lifecycle-and-sop.md` §3), then finish with `templates/build-report.md`.
 
-If you drive Service Studio through the MCP / Model API, read `references/service-studio-mcp.md` first.
+If you drive Service Studio through the MCP / Model API, read `references/service-studio-mcp.md` and the installed Service Studio MCP skill first. Keep the live tool contract authoritative; do not copy old session details into a new task.
 
 ### Reviewing or enforcing
 1. Collect the module list, layers, apps and references. Run the validator:
@@ -119,12 +124,12 @@ If you drive Service Studio through the MCP / Model API, read `references/servic
 4. Write the result with `templates/review-report.md`: findings by severity, each with its rule ID, the evidence and a concrete fix.
 
 ### Deploying, hotfixing, testing
-Follow `references/lifecycle-and-sop.md`: LifeTime only, impact analysis, per-environment configuration, no deployments in business hours, the hotfix-and-backport process, BDD tests, and CI gates.
+Follow `references/lifecycle-and-sop.md` and the project release policy: LifeTime for governed environment promotion, impact analysis, per-environment configuration, migrations, hotfix/backport and appropriate tests. Deployment windows are a project operational decision.
 
 ## 4. Rules quick reference (most often broken)
 
 **Security (Reactive / Mobile)**:
-- The client is untrusted. Every client-called aggregate, data action and server action is a REST endpoint protected only by the screen's roles.
+- The client is untrusted. Every client-called aggregate, data action and server action is a REST endpoint that require server-side authorization for the requested record and operation; screen roles alone are insufficient.
 - Use custom roles on every screen; no Anonymous or Registered unless intended (SEC-07, SEC-08).
 - **Identity comes from the server only**: `GetUserId()` inside the aggregate or action, never as a parameter or block input (SEC-09).
 - Role **and** record-ownership checks go in the BL action, not just on hidden buttons (SEC-01). One screen per role profile (SEC-13).

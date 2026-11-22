@@ -38,5 +38,13 @@ python scripts/validate_architecture.py scripts/example_deps.json --strict
 - Update `CHANGELOG.md` (under *Unreleased*, or a new version). Bump `metadata.version` in `SKILL.md` for releases (semantic versioning: new rules = minor, wording fixes = patch, a changed meaning of existing IDs = major).
 - If you changed `adapters/core-rules.md`, copy the same text into the marked block of `adapters/copilot-instructions.md`.
 
+## Reliability review guidance
+
+Use `ARV` for verification and reliability review rules. These are manual acceptance checks unless a script explicitly implements them. Keep platform facts, house conventions and observed project lessons distinct, and link primary sources from `references/verification-and-reliability.md`.
+
+Run `python tests/test_validator.py -v` as well as the existing snapshot checks. Node must be on PATH, or set `OUTSYSTEMS_NODE` to its executable. The behavioral tests cover dependency strength, strict house rules, input validation and incomplete inventories. Review snapshot differences before accepting an intended output change.
+
+Run repository maintenance checks from a full Git checkout. Release archives intentionally exclude these scripts; installed skill packages still include the runtime validators.
+
 ## Code of conduct
 By participating you agree to follow the [Code of Conduct](CODE_OF_CONDUCT.md).

@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 // Validate an OutSystems 11 module/application dependency graph (Node.js 16+, no packages).
 // Same rules, input and exit codes as validate_architecture.py:
+// String references are strong; objects use {target, kind}. Weak service-action
+// and screen-destination edges are excluded from Canvas checks. Unknown edges
+// are conservative; external modules are unvalidated, never assumed Foundation.
 //   node validate_architecture.mjs deps.json [--strict] [--json]
 // Exit code: 0 = no Blocker/Major, 1 = Blocker/Major found, 2 = bad input.
 import { readFileSync } from "node:fs";
@@ -11,6 +14,7 @@ const SUFFIXES = {
   bl: ["core", "bl"],
   cw: ["core", "cw"], mcw: ["core", "cw"], mui: ["core", "cw"],
   sync: ["core", "other"], eng: ["core", "other"], api: ["core", "other"],
+  bpt: ["core", "other"], wf: ["core", "other"],
   lib: ["foundation", "other"], is: ["foundation", "other"],
   th: ["foundation", "other"], theme: ["foundation", "other"],
   pat: ["foundation", "other"], drv: ["foundation", "other"],
@@ -60,24 +64,55 @@ function tarjan(nodes, edges) {
 export function validate(data, strict) {
   const findings = [];
   const add = (rule, severity, message) => findings.push({ rule, severity, message });
-  const mods = {};
-  for (const m of data.modules || []) {
+  if (!data || typeof data !== "object" || !Array.isArray(data.modules))
+    throw new Error("inventory must contain a 'modules' array");
+  const mods = Object.create(null);
+  const refCounts = { strong: 0, weak: 0, unknown: 0 }, unknownRefs = [];
+  for (const m of data.modules) {
+    if (!m || typeof m !== "object" || typeof m.name !== "string" || !m.name.trim())
+      throw new Error("each module must have a non-empty string name");
     const name = m.name;
+    if (Object.hasOwn(mods, name)) throw new Error(`duplicate module '${name}'`);
+    if ("layer" in m && typeof m.layer !== "string") throw new Error(`${name}: layer must be a string`);
+    if ("app" in m && m.app !== null && typeof m.app !== "string") throw new Error(`${name}: app must be a string or null`);
     let [layer, role, matched] = infer(name);
     const explicit = "layer" in m;
     layer = (m.layer ?? layer).toLowerCase();
-    if (!(layer in RANK)) throw new Error(`${name}: unknown layer '${layer}'`);
+    if (!Object.hasOwn(RANK, layer)) throw new Error(`${name}: unknown layer '${layer}'`);
     role = m.role ?? ((matched || !explicit || layer === "end-user") ? role : "other");
+    if ("role" in m && !["fe", "cw", "bl", "cs", "other"].includes(m.role))
+      throw new Error(`${name}: unknown role '${m.role}'`);
     if (!matched && !explicit)
       add("ARC-07", "Minor", `${name}: no canvas suffix; assumed End-User. Add a suffix or an explicit "layer".`);
-    mods[name] = { layer, role, app: m.app ?? null, sub: suffixOf(name), refs: (m.references || []).filter((r) => r !== name) };
+    const refs = "references" in m ? m.references : [];
+    if (!Array.isArray(refs)) throw new Error(`${name}: references must be an array`);
+    const parsed = [];
+    for (const ref of refs) {
+      const target = typeof ref === "string" ? ref : ref?.target;
+      const kind = typeof ref === "string" ? "strong" : (ref && "kind" in Object(ref) ? ref.kind : "strong");
+      if (typeof target !== "string" || !target.trim() || !["strong", "weak", "service-action", "screen-destination", "unknown"].includes(kind))
+        throw new Error(`${name}: invalid reference; expected target and supported kind`);
+      if (target === name) continue;
+      const strength = ["weak", "service-action", "screen-destination"].includes(kind) ? "weak" : kind;
+      refCounts[strength]++;
+      if (kind === "unknown") unknownRefs.push(`${name} -> ${target}`);
+      parsed.push({ target, kind, strength });
+    }
+    mods[name] = { layer, role, app: m.app ?? null, sub: "role" in m ? m.role : suffixOf(name), refs: parsed };
   }
 
   const externals = new Set();
-  const edges = {};
+  const edges = Object.create(null), houseEdges = Object.create(null);
   for (const [n, m] of Object.entries(mods)) {
     edges[n] = [];
-    for (const r of m.refs) (r in mods ? edges[n].push(r) : externals.add(r));
+    houseEdges[n] = [];
+    for (const ref of m.refs) {
+      const r = ref.target;
+      if (r in mods) {
+        if (ref.strength !== "weak" && !edges[n].includes(r)) edges[n].push(r);
+        if (ref.kind !== "screen-destination" && !houseEdges[n].includes(r)) houseEdges[n].push(r);
+      } else externals.add(r);
+    }
   }
 
   for (const [n, m] of Object.entries(mods)) {
@@ -94,7 +129,7 @@ export function validate(data, strict) {
   for (const comp of tarjan(Object.keys(mods), edges))
     add("ARC-03", "Major", `Cycle between modules: ${comp.join(" <-> ")}. Move elements, merge, or add a composition module on top.`);
 
-  const apps = {};
+  const apps = Object.create(null);
   for (const [n, m] of Object.entries(mods)) {
     if (!m.app) continue;
     const a = (apps[m.app] ??= { layer: "foundation", mods: [] });
@@ -129,7 +164,7 @@ export function validate(data, strict) {
     };
     const why = { "fe|bl": "screens must consume CW blocks only", "fe|cs": "screens must not touch CS entities/CRUD", "cw|cs": "blocks must go through BL Service Actions, not CS" };
     for (const [n, m] of Object.entries(mods))
-      for (const r of edges[n]) {
+      for (const r of houseEdges[n]) {
         const rule = forbidden[m.role]?.[mods[r].role];
         if (rule) {
           const reason = why[`${m.role}|${mods[r].role}`] ?? "breaks the FE -> CW -> BL -> CS chain";
@@ -138,8 +173,9 @@ export function validate(data, strict) {
       }
   }
 
-  const unknown = [...externals].filter((e) => !KNOWN_FOUNDATION.has(e.toLowerCase())).sort();
-  if (unknown.length) add("INFO", "Info", "External references not validated (treated as Foundation): " + unknown.join(", "));
+  if (externals.size) add("INFO", "Info", "External references not validated: " + [...externals].sort().join(", "));
+  if (unknownRefs.length) add("INFO", "Info", "Unknown reference strength checked conservatively as strong: " + unknownRefs.sort().join(", "));
+  if (!Object.keys(mods).length) add("INFO", "Info", "Empty inventory: no modules assessed.");
 
   // Plain code-point ordering, identical to Python's sorted(), so both scripts emit the same JSON.
   const cmp = (x, y) => (x < y ? -1 : x > y ? 1 : 0);
@@ -150,6 +186,9 @@ export function validate(data, strict) {
     counts: { Blocker: count("Blocker"), Major: count("Major"), Minor: count("Minor") },
     layers: Object.fromEntries(Object.entries(mods).sort((a, b) => cmp(a[0], b[0])).map(([n, m]) => [n, m.layer])),
     application_layers: Object.fromEntries(Object.entries(apps).sort((a, b) => cmp(a[0], b[0])).map(([a, v]) => [a, v.layer])),
+    reference_counts: refCounts,
+    external_modules: [...externals].sort(),
+    validation_complete: !!Object.keys(mods).length && !externals.size && !unknownRefs.length,
   };
   return { summary, findings };
 }
@@ -168,6 +207,6 @@ else {
   console.log(`Modules: ${summary.modules}  Applications: ${summary.applications}  Mode: ${summary.strict ? "strict (house standard)" : "canvas"}`);
   console.log(`Blocker: ${c.Blocker}  Major: ${c.Major}  Minor: ${c.Minor}`);
   for (const f of findings) console.log(`[${f.severity}] ${f.rule}: ${f.message}`);
-  if (!findings.some((f) => f.severity !== "Info")) console.log("PASS: no architecture violations found.");
+  if (!findings.some((f) => f.severity !== "Info")) console.log("PASS: no covered architecture violations found in the supplied inventory.");
 }
 process.exit(summary.counts.Blocker || summary.counts.Major ? 1 : 0);

@@ -6,8 +6,8 @@ Collected from builds of several enterprise OutSystems 11 Reactive applications 
 1. **A project document can conflict with the house standard.** On one project, the project's own prompt put all DTO structures in CS and let the Front-End call CW, BL and CS directly, which contradicts the strict 4-layer standard. **Rule**: detect the conflict early, ask which one wins, and record the decision in the blueprint. Don't silently rework modules that are already built.
 2. **A flat module tree turns into a mess fast.** **Rule**: create the folders first (entities by concept, CRUD apart from workflow or state actions, Structures, ServiceActions, PrivateActions, Integrations, Blocks by concept). Give screens and workflows specific names.
 3. **"Done" claims from memory were wrong.** **Rule**: verify every created element by reading it back from the platform, and check validation errors and warnings after each change.
-4. **Work in phases with a stop after each**: discovery (read-only) → plan approval → CS → BL → CW → FE → verification. Each phase ends with a short report: created, merged, what the user must publish or add, open questions.
-5. **Don't invent source data.** When the source of a field is unknown, mark it `NOT FOUND` and keep a mock provider (e.g. a JSON-deserialized stub inside a `*_Mock` action) until the real source is confirmed.
+4. **Work in dependency order within the agreed scope**: discovery → design → CS → BL → CW → FE → verification. Continue authorized work without a new approval at every phase. Record producer/consumer readiness and any publishing or dependency step the user has reserved.
+5. **Don't invent source data.** When the source of a field is unknown, mark it `NOT FOUND`. Keep demonstrations explicitly isolated in a mock mode. In a real-data journey, show unavailable data instead of fabricated values, and switch dependent blocks together so a real identity never displays sample financial or case details.
 6. Keep a running **build log** (what was created per module, results, manual steps, open issues) with real timestamps.
 
 ## Data and logic

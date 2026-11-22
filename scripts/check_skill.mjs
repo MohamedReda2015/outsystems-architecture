@@ -58,7 +58,7 @@ const defined = [...checklist.matchAll(/^\| ([A-Z]+-\d+) \|/gm)].map((m) => m[1]
 const dup = defined.filter((id, i) => defined.indexOf(id) !== i);
 if (dup.length) errors.push(`review-checklist.md: duplicate rule IDs ${[...new Set(dup)].join(", ")}`);
 const definedSet = new Set(defined);
-const idRe = /\b(ARC|HSE|DAT|INT|UI|PERF|SEC|AUD|MNT|OPS|TST)-(\d+)\b/g;
+const idRe = /\b(ARC|HSE|DAT|INT|UI|PERF|SEC|AUD|MNT|OPS|TST|ARV)-(\d+)\b/g;
 for (const f of files.filter((x) => /\.(md|mdc|py|mjs)$/.test(x) && !x.startsWith(".github/"))) {
   for (const m of read(f).matchAll(idRe)) {
     if (!definedSet.has(m[0])) errors.push(`${f}: cites undefined rule ${m[0]}`);

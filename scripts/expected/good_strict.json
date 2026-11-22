@@ -20,7 +20,22 @@
     "application_layers": {
       "Integrations": "foundation",
       "Orders": "end-user"
-    }
+    },
+    "reference_counts": {
+      "strong": 10,
+      "weak": 0,
+      "unknown": 0
+    },
+    "external_modules": [
+      "OutSystemsUI"
+    ],
+    "validation_complete": false
   },
-  "findings": []
+  "findings": [
+    {
+      "rule": "INFO",
+      "severity": "Info",
+      "message": "External references not validated: OutSystemsUI"
+    }
+  ]
 }

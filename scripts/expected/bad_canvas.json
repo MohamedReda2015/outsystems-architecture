@@ -23,7 +23,14 @@
       "Claims": "end-user",
       "Common": "foundation",
       "Portal": "end-user"
-    }
+    },
+    "reference_counts": {
+      "strong": 11,
+      "weak": 0,
+      "unknown": 0
+    },
+    "external_modules": [],
+    "validation_complete": true
   },
   "findings": [
     {

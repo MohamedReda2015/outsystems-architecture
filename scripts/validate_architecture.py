@@ -17,8 +17,11 @@ Input JSON:
 }
 "layer" (end-user | core | foundation) and "role" (fe | cw | bl | cs | other)
 are optional; when absent they are inferred from the module-name suffix.
-References to modules not listed are treated as external Foundation
-(e.g. OutSystemsUI) and are not validated.
+String references are strong for backward compatibility. Object references use
+{"target": "Orders_BL", "kind": "service-action"}. Kinds: strong, weak,
+service-action, screen-destination, unknown. Canvas checks exclude weak edges;
+strict house checks also inspect weak calls, except screen destinations.
+External modules and unknown reference kinds are reported as unvalidated.
 
 Exit code: 0 = no Blocker/Major findings, 1 = Blocker/Major found, 2 = bad input.
 """
@@ -34,6 +37,7 @@ SUFFIXES = {
     "bl": ("core", "bl"),
     "cw": ("core", "cw"), "mcw": ("core", "cw"), "mui": ("core", "cw"),
     "sync": ("core", "other"), "eng": ("core", "other"), "api": ("core", "other"),
+    "bpt": ("core", "other"), "wf": ("core", "other"),
     "lib": ("foundation", "other"), "is": ("foundation", "other"),
     "th": ("foundation", "other"), "theme": ("foundation", "other"),
     "pat": ("foundation", "other"), "drv": ("foundation", "other"),
@@ -107,28 +111,63 @@ def validate(data, strict):
     def add(rule, sev, msg):
         findings.append({"rule": rule, "severity": sev, "message": msg})
 
+    if not isinstance(data, dict) or not isinstance(data.get("modules"), list):
+        raise ValueError("inventory must contain a 'modules' array")
     mods = {}
-    for m in data.get("modules", []):
+    ref_counts = {"strong": 0, "weak": 0, "unknown": 0}
+    unknown_refs = []
+    for m in data["modules"]:
+        if not isinstance(m, dict) or not isinstance(m.get("name"), str) or not m["name"].strip():
+            raise ValueError("each module must have a non-empty string name")
         name = m["name"]
+        if name in mods:
+            raise ValueError(f"duplicate module '{name}'")
+        if "layer" in m and not isinstance(m["layer"], str):
+            raise ValueError(f"{name}: layer must be a string")
+        if "app" in m and m["app"] is not None and not isinstance(m["app"], str):
+            raise ValueError(f"{name}: app must be a string or null")
         layer, role, matched = infer(name)
         explicit = "layer" in m
         layer = m.get("layer", layer).lower()
         if layer not in RANK:
             raise ValueError(f"{name}: unknown layer '{layer}'")
         role = m.get("role", role if (matched or not explicit or layer == "end-user") else "other")
+        if role not in ("fe", "cw", "bl", "cs", "other"):
+            raise ValueError(f"{name}: unknown role '{role}'")
         if not matched and not explicit:
             add("ARC-07", "Minor", f"{name}: no canvas suffix; assumed End-User. "
                 "Add a suffix or an explicit \"layer\".")
+        refs = m.get("references", [])
+        if not isinstance(refs, list):
+            raise ValueError(f"{name}: references must be an array")
+        parsed = []
+        for ref in refs:
+            target, kind = (ref, "strong") if isinstance(ref, str) else (
+                (ref.get("target"), ref.get("kind", "strong")) if isinstance(ref, dict) else (None, None))
+            if not isinstance(target, str) or not target.strip() or kind not in (
+                    "strong", "weak", "service-action", "screen-destination", "unknown"):
+                raise ValueError(f"{name}: invalid reference; expected target and supported kind")
+            if target == name:
+                continue
+            strength = "weak" if kind in ("weak", "service-action", "screen-destination") else kind
+            ref_counts[strength] += 1
+            if kind == "unknown":
+                unknown_refs.append(f"{name} -> {target}")
+            parsed.append({"target": target, "kind": kind, "strength": strength})
         mods[name] = {"layer": layer, "role": role, "app": m.get("app"),
-                      "sub": suffix_of(name),
-                      "refs": [r for r in m.get("references", []) if r != name]}
+                      "sub": m["role"] if "role" in m else suffix_of(name), "refs": parsed}
 
     externals = set()
     edges = {n: [] for n in mods}
+    house_edges = {n: [] for n in mods}
     for n, m in mods.items():
-        for r in m["refs"]:
+        for ref in m["refs"]:
+            r = ref["target"]
             if r in mods:
-                edges[n].append(r)
+                if ref["strength"] != "weak" and r not in edges[n]:
+                    edges[n].append(r)
+                if ref["kind"] != "screen-destination" and r not in house_edges[n]:
+                    house_edges[n].append(r)
             else:
                 externals.add(r)
 
@@ -192,7 +231,7 @@ def validate(data, strict):
             ("cw", "cs"): "blocks must go through BL Service Actions, not CS",
         }
         for n, m in mods.items():
-            for r in edges[n]:
+            for r in house_edges[n]:
                 rule = forbidden.get(m["role"], {}).get(mods[r]["role"])
                 if rule:
                     reason = why.get((m["role"], mods[r]["role"]), "breaks the FE -> CW -> BL -> CS chain")
@@ -200,9 +239,11 @@ def validate(data, strict):
                         f"({mods[r]['role'].upper()}): {reason}.")
 
     if externals:
-        unknown = sorted(e for e in externals if e.lower() not in KNOWN_FOUNDATION)
-        if unknown:
-            add("INFO", "Info", "External references not validated (treated as Foundation): " + ", ".join(unknown))
+        add("INFO", "Info", "External references not validated: " + ", ".join(sorted(externals)))
+    if unknown_refs:
+        add("INFO", "Info", "Unknown reference strength checked conservatively as strong: " + ", ".join(sorted(unknown_refs)))
+    if not mods:
+        add("INFO", "Info", "Empty inventory: no modules assessed.")
 
     findings.sort(key=lambda f: (SEV_ORDER[f["severity"]], f["rule"], f["message"]))
     summary = {
@@ -210,6 +251,9 @@ def validate(data, strict):
         "counts": {s: sum(1 for f in findings if f["severity"] == s) for s in ("Blocker", "Major", "Minor")},
         "layers": {n: m["layer"] for n, m in sorted(mods.items())},
         "application_layers": {a: v["layer"] for a, v in sorted(apps.items())},
+        "reference_counts": ref_counts,
+        "external_modules": sorted(externals),
+        "validation_complete": bool(mods) and not externals and not unknown_refs,
     }
     return summary, findings
 
@@ -224,7 +268,7 @@ def main():
         with open(args.deps, encoding="utf-8") as fh:
             data = json.load(fh)
         summary, findings = validate(data, args.strict)
-    except (OSError, ValueError, KeyError) as exc:
+    except (OSError, ValueError, KeyError, TypeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
@@ -238,7 +282,7 @@ def main():
         for f in findings:
             print(f"[{f['severity']}] {f['rule']}: {f['message']}")
         if not any(f["severity"] in ("Blocker", "Major", "Minor") for f in findings):
-            print("PASS: no architecture violations found.")
+            print("PASS: no covered architecture violations found in the supplied inventory.")
     return 1 if summary["counts"]["Blocker"] or summary["counts"]["Major"] else 0
 
 

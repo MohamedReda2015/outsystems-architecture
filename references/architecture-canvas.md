@@ -27,8 +27,8 @@ Architecture is not a one-time activity. Repeat these two steps as new concepts 
 Library modules (the "Library" module type in Service Studio) can be referenced in both directions without creating cycles of the *application*. They are still Foundation and must not contain business logic.
 
 ## 3. Strong vs weak references
-- **Strong**: server actions, client actions, blocks, entities used in aggregates (in some contexts), structures. A strong reference makes the consumer depend on the producer's implementation at deploy time.
-- **Weak**: Service Actions, screen destinations (O11), entities (read through the data model), structures, static entities. The consumer depends only on the signature, so the producer can be redeployed without republishing consumers, as long as the signature stays compatible.
+- **Strong**: Server Actions, Client Actions, blocks, images, resources, scripts, themes, roles, processes and process activities. These couple the consumer to producer implementation.
+- **Weak**: screens, Service Actions, database/local-storage/static entities and structures. Data-type signatures can still change and require consumer updates. If any consumed element in a module pair is strong, that pair is strongly coupled. See [official dependency types](https://success.outsystems.com/documentation/11/building_apps/reusing_and_refactoring/understand_strong_and_weak_dependencies/).
 - Prefer weak references between applications and domains. Within one tightly coupled module group, strong references are acceptable.
 
 ## 4. The 3 validation rules

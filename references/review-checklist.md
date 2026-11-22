@@ -1,5 +1,8 @@
 # Review checklist (enforceable rules)
 
+Canvas graph findings apply to strong references; weak Service Actions, screens and data-type-only dependencies are assessed for contracts and runtime coupling separately. Mixed module pairs remain strong. House rules are project conventions, not additional platform dependency types.
+
+
 Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs stay stable between versions: new rules get new numbers.
 
 **Severity**:
@@ -158,3 +161,15 @@ Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs s
 3. Sample each module type: CS entities and CRUD, BL public actions, CW blocks, FE screens, IS actions, timers, exposed APIs.
 4. Record each finding as: ID · severity · element (`Module.Folder.Element`) · evidence · fix. Order the findings: Security, Performance, Architecture, Maintainability.
 5. Summarize the counts by severity and the top 3 risks. Fill in `templates/review-report.md`.
+
+
+## Reliability and evidence (2026-11 review)
+
+These manual checks complement, rather than extend the claimed coverage of, the static scripts. Details and acceptance cases: [verification and reliability](verification-and-reliability.md).
+
+| ID | Severity | Rule |
+|---|---|---|
+| ARV-01 | Major | Classify strong, weak and unknown dependency edges; do not claim full coverage from a partial graph. |
+| ARV-02 | Major | Verify producer contracts and consumer freshness before mapping fields or declaring delivery complete. |
+| ARV-03 | Major | Preserve temporal identity and plan data migrations; never mix real identities with sample dependent data. |
+| ARV-04 | Major | Report prepared, validated, merged, published and runtime-tested evidence separately. |

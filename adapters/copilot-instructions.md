@@ -7,7 +7,7 @@ When helping with OutSystems 11 work, follow the `outsystems-architecture` skill
 - Apply the always-on rules in `outsystems-architecture/adapters/core-rules.md` (included below for assistants that cannot open files).
 
 <!-- BEGIN core rules: keep in sync with adapters/core-rules.md -->
-Precedence: project architecture document > house standard (FE → CW → BL → CS) > OutSystems canvas, best practices and Code Quality. Flag conflicts. Security is never relaxed.
+Project architecture chooses supported conventions; the house chain supplies defaults. Installed contracts and official documentation determine platform facts. Flag unresolved material conflicts.
 
 Canvas rules for modules and apps:
 - No upward references.
@@ -40,4 +40,5 @@ Always:
 - No site property updates in logic.
 - Verify before reporting.
 - No Production publishing without approval.
+- Use `references/verification-and-reliability.md` for evidence and domain acceptance checks. Distinguish prepared, validated, merged, published and runtime verified; preserve task scope and existing authorization.
 <!-- END core rules -->
