@@ -53,3 +53,11 @@ For deployment, capture environment-specific settings, secrets by reference only
 - [Official Service Actions guidance](https://success.outsystems.com/documentation/11/building_apps/reusing_and_refactoring/use_services_to_expose_functionality/): contract, deployment and transaction differences.
 - [Service Studio MCP contract](https://github.com/OutSystems/outsystems11-mcp): use the installed skill and live tool descriptions for model work.
 - Anonymized prior-project observations reviewed 2026-11-22: stale imported contracts, historical-versus-current record confusion, temporary-model-only validation and mixed mock/real dashboards. These support the evidence checks above, not a claim that any platform action was retested during this skill review.
+
+### Acceptance ownership and change activation
+
+For each cross-module criterion, name the owning contract and its producers/consumers; include strong and weak references in deployment-impact review even when only strong edges affect Canvas cycles. Read the refreshed consumer signature, including structure attributes, before declaring the dependency available. An imported entity exposing only an identifier is incomplete evidence for a query that needs more fields.
+
+Specify compatibility windows, backfill ownership and the activation point for new required fields or status meanings. Verify an old consumer against the compatible producer before switching the new consumer. Keep deployment recovery distinct from reversing committed business data. Carry source revision, target app version and unresolved manual steps into the story report.
+
+Use [the cross-skill delivery contract](cross-skill-delivery.md) for ownership and trace fields. These are deployment planning recommendations; actual capabilities come from the selected O11/ODC environment.

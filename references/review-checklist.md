@@ -173,3 +173,10 @@ These manual checks complement, rather than extend the claimed coverage of, the 
 | ARV-02 | Major | Verify producer contracts and consumer freshness before mapping fields or declaring delivery complete. |
 | ARV-03 | Major | Preserve temporal identity and plan data migrations; never mix real identities with sample dependent data. |
 | ARV-04 | Major | Report prepared, validated, merged, published and runtime-tested evidence separately. |
+
+## Cross-skill acceptance
+
+| ID | Severity | Rule | Check |
+|---|---|---|---|
+| ARV-05 | Major | Trace cross-module criteria to an owner, contract and refreshed consumer signature, including required attributes. | Manual; verification-and-reliability reference. |
+| ARV-06 | Major | Order changes by verified dependencies and document compatibility, migration, activation and data-recovery boundaries. | Manual; verify against the story acceptance cases. |

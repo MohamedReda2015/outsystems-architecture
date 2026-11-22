@@ -177,3 +177,7 @@ Follow `references/lifecycle-and-sop.md` and the project release policy: LifeTim
 | `references/review-checklist.md` | any review or "is this correct?" question |
 | `scripts/validate_architecture.py` / `.mjs` | automatic dependency validation from a JSON export |
 | `research/sources.md` | where a rule comes from (official vs community), to cite or re-verify |
+
+For requirement-to-runtime handoffs, also use the cross-skill acceptance section in [verification and reliability](references/verification-and-reliability.md); preserve source/story/criterion IDs and the tested application version.
+
+Use [cross-skill delivery](references/cross-skill-delivery.md) when coordinating BRD analysis, stories and the six domain skills; it defines ownership, baseline evidence and dependency-driven ordering.
