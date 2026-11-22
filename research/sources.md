@@ -29,6 +29,9 @@ Read 2026-11-22. **O** = official OutSystems documentation or OutSystems-owned; 
 | Forum: module naming cheat sheet | https://www.outsystems.com/forums/discussion/59771/cheat-sheet-outsystems-module-naming-convention/ | module-standard |
 | Accessibility (OutSystems UI, WCAG 2.1 AA; EAA) | https://www.outsystems.com/blog/posts/outsystems-ui-digital-accessibility/ · https://www.outsystems.com/legal/european-accessibility-act/ | ui-standards |
 | maiurnarendra/outsystems-ai-skills v0.14.1 (GitHub, MIT, reviewed 2026-11-22): debugging, lifetime-deploy | https://github.com/maiurnarendra/outsystems-ai-skills | debugging, lifecycle-and-sop (OPS-08, OPS-09) |
+| OutSystems product updates (2026): O11 MCP (read GA / write Beta, Compare and Merge), Traditional-to-Reactive conversion (GA, producer-to-consumer), Performance Analytics for Reactive and Mobile (Beta, linked to Code Quality, formerly AI Mentor Studio) | https://outsystems.com/product-updates/outsystems-11-mcp · https://www.outsystems.com/product-updates/o11-traditional-to-reactive · https://www.outsystems.com/product-updates/o11-performance-analytics-for-reactive-and-mobile-applications-beta | service-studio-mcp, lifecycle-and-sop (MNT-09), performance |
+| OutSystems/outsystems11-mcp (official skill, contract 2, design notes) and community Idea 15580 (per-environment MCP control) | https://github.com/OutSystems/outsystems11-mcp · https://www.outsystems.com/Ideas/15580/ | service-studio-mcp (OPS-10) |
+| Forge "MCP Server (O11)" community component (BSD-3) | https://www.outsystems.com/forge/component-overview/22079/mcp-server-o11 | integration-and-caching (INT-07) |
 
 ## Not verified / open
 - The full text of the official "Apply a hotfix" and "Deployment plans" pages was not retrieved. The hotfix SOP is based on official best-practice bullets and community threads.

@@ -3,7 +3,7 @@ name: outsystems-architecture
 description: Design, review and evolve OutSystems 11 application architecture, module boundaries, dependencies, deployment and verification. Distinguishes official Architecture Canvas rules from the house FE/CW/BL/CS pattern. Use for O11 architecture or cross-module changes; use domain skills for implementation details and ODC guidance for ODC.
 license: MIT
 metadata:
-  version: 2.1.0
+  version: 2.2.0
   updated: "2026-11-22"
   platform: OutSystems 11 (Reactive Web, Mobile, Traditional Web)
   agent-independent: "true"
@@ -19,6 +19,8 @@ metadata:
 - Preserve the user's requested scope and existing authorization. Continue routine reversible work; a skill does not authorize publishing, dependency changes or production operations beyond that scope. Do not introduce phase-by-phase approval unless the user or environment requires it.
 - Prefer installed API signatures and version-matched official documentation. A repository development branch, community workaround or old project observation is evidence to investigate, not a release guarantee.
 - Report evidence separately: **prepared → model validated → merged → published → runtime verified**. A static checker passing proves only its covered checks on the supplied inventory. Unknown, blocked and not tested remain explicit.
+- Agent work through the Service Studio MCP follows [`references/service-studio-mcp.md`](references/service-studio-mcp.md) (`OPS-10`): capability status (Traditional Web is Beta even for reads), environment and approval governance, edit-session copy semantics, timeouts, manual-only steps and Model API pitfalls. It is the shared MCP reference for every house skill.
+- Related skills: domain detail in outsystems-backend-conventions, outsystems-frontend-conventions, outsystems-live-style-guide, outsystems-bpt and outsystems-cmf; requirements in outsystems-brd-analysis and outsystems-user-story-implementation; the end-to-end lifecycle (phases, gates, increments, MCP vs manual) in **outsystems-ai-mentor**.
 - Read [verification and reliability](references/verification-and-reliability.md) when changing data contracts, concurrent operations, runtime behavior or verification. It contains the concrete acceptance checks and sources for this skill.
 
 
@@ -170,11 +172,11 @@ Follow `references/lifecycle-and-sop.md` and the project release policy: LifeTim
 | `references/performance.md` | performance tuning or review |
 | `references/audit-trail.md` | audit logging, Audit_Lib, compliance |
 | `references/domain-driven-and-scale.md` | large factories, many teams, domains, microservices, multi-tenant, mobile with many teams |
-| `references/code-quality-patterns.md` | interpreting or predicting Code Quality (AI Mentor Studio) and Discovery findings |
+| `references/code-quality-patterns.md` | interpreting or predicting Code Quality (Code Quality, formerly AI Mentor Studio) and Discovery findings |
 | `references/lifecycle-and-sop.md` | environments, LifeTime, deployments, hotfixes, Definition of Done, code review, testing, CI/CD |
 | `references/debugging.md` | diagnosing an error, slowness or front-end issue before fixing it |
 | `references/lessons-learned.md` | before any real build: mistakes already made once |
-| `references/service-studio-mcp.md` | editing modules through the Service Studio MCP / Model API |
+| `references/service-studio-mcp.md` | **any agent work through the Service Studio MCP**: capability status, governance, edit sessions, timeouts, manual steps, Model API pitfalls, CSS verification — the shared reference for all house skills |
 | `references/review-checklist.md` | any review or "is this correct?" question |
 | `scripts/validate_architecture.py` / `.mjs` | automatic dependency validation from a JSON export |
 | `research/sources.md` | where a rule comes from (official vs community), to cite or re-verify |

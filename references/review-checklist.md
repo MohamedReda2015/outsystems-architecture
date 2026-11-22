@@ -68,6 +68,7 @@ Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs s
 | INT-04 | Minor | `_IS` and `_API` contain no business logic |
 | INT-05 | Major | The integration pattern was chosen deliberately; sync is one-way; writes are write-through |
 | INT-06 | Major | API and Service Action changes follow versioning (breaking change = new version; deprecate the old one) |
+| INT-07 | Major | Exposing business logic to outside AI agents (MCP tools served by an app or a Forge component) is an exposed API: dedicated `_API`-level module, authentication, per-tool authorization on the server, input validation, rate limits and audit; third-party components reviewed before production |
 
 ## UI — Screens, blocks, themes
 | ID | Sev | Rule |
@@ -135,6 +136,7 @@ Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs s
 | MNT-06 | Minor | No reminder comments promoted to QA `[CQ]` |
 | MNT-07 | Major | No consumption of deprecated elements `[CQ]` |
 | MNT-08 | Minor | TrueChange warnings don't increase; hidden warnings have a documented reason `[TC]` |
+| MNT-09 | Major | Traditional Web → Reactive migrations use Service Studio's **Convert to Reactive** (it clones the module) in producer-to-consumer order, then a cleanup pass: screen preparations become aggregates/data actions, session variables become client or server state, and every server action the converted UI now calls is reviewed as a public endpoint (`SEC-*`) |
 
 ## OPS — Lifecycle and SOP (lifecycle-and-sop.md)
 | ID | Sev | Rule |
@@ -148,6 +150,7 @@ Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs s
 | OPS-07 | Minor | One user per developer; the same Service Studio version across the team |
 | OPS-08 | Major | Automated or agent-driven deployments use the LifeTime Deployment API with a service-account token kept in an environment variable (never printed or committed); one plan per run with work-item keys as notes; untagged changes tagged first; plan conflicts and outdated consumers checked before start; agents never deploy to forbidden targets (Pre-Production, Production), never publish modules and never delete plans, versions or apps |
 | OPS-09 | Major | Defects and slowness are diagnosed before fixing: exact symptom and environment captured, evidence from logs and the model, one falsifiable hypothesis at a time, reproduction in Development, temporary instruments removed, before/after numbers for performance (`references/debugging.md`) |
+| OPS-10 | Major | Agent work through the Service Studio MCP follows `references/service-studio-mcp.md`: environment confirmed with the user and limited to Development; one writer per module and a fresh edit session after human edits or partial merges; every write read back and its flows laid out before merge; an agent change log kept; publish and deploy only on an explicit yes |
 
 ## TST — Testing
 | ID | Sev | Rule |
@@ -182,3 +185,5 @@ These manual checks complement, rather than extend the claimed coverage of, the 
 |---|---|---|---|
 | ARV-05 | Major | Trace cross-module criteria to an owner, contract and refreshed consumer signature, including required attributes. | Manual; verification-and-reliability reference. |
 | ARV-06 | Major | Order changes by verified dependencies and document compatibility, migration, activation and data-recovery boundaries. | Manual; verify against the story acceptance cases. |
+
+

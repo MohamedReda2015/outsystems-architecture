@@ -43,6 +43,9 @@ Sources: OutSystems 11 docs *Performance Top 10 Rules*, *Performance Best Practi
 - Configure virtual memory and system settings according to the OutSystems checklist.
 - Watch the slow-query and slow-integration reports regularly. Fix problems before users notice them.
 
+## Measuring first
+- **Performance Analytics** (Beta, manual activation) extends LifeTime Analytics with client, network and server breakdowns and APDEX scores for Reactive and Mobile apps, linked to Code Quality findings. Use it, or the browser Performance tab and screen-request logs, to find the slow part **before** optimizing, and record numbers before and after (`OPS-09`).
+
 ## Module health signals (official guidance)
 - A module larger than about **4 MB** usually points to poor architecture (large resources, too many concepts). Split it, and move resources out.
 - More than about **20 site properties** in one module points to bad design.

@@ -2,6 +2,13 @@
 
 All notable changes to this skill. Versions follow [semantic versioning](https://semver.org/) of `metadata.version` in `SKILL.md`.
 
+## 2.2.0 — 2026-11-22
+Cross-skill review: research on recent O11 changes and lessons from agent-driven projects.
+- `references/service-studio-mcp.md` rewritten as the **shared MCP reference** for all house skills: capability status by app type (Traditional Web Beta even for reads), MCP contract and tool sets by build, governance (environment not reported, inherited rights, no LifeTime control, attribution and change log, self-reported approval prompt, both platforms connected), edit-session copy semantics, official timeouts (120 s / 300 s) and large-module options, manual-only steps, Model API pitfalls (static ids, Start/End nodes, private blocks, explicit static dependencies, `CreateProcess` vs ODC, client role checks, `IContainer`), CSS deploy verification.
+- New rules: `OPS-10` agent MCP governance; `MNT-09` Traditional → Reactive migration with **Convert to Reactive** (producer-to-consumer, cleanup, endpoint security review); `INT-07` exposing business logic to outside AI agents as MCP tools is an exposed API.
+- Performance: measure first with Performance Analytics (Beta) or browser and request timings; Code Quality is the current name of AI Mentor Studio.
+- SKILL.md links the shared MCP reference and the related skills, including outsystems-ai-mentor.
+
 ## 2.1.0 — 2026-11-22
 Ideas adopted, after review, from a third-party OutSystems skills collection (maiurnarendra/outsystems-ai-skills, MIT; paraphrased).
 - New `references/debugging.md` and rule `OPS-09`: diagnosis loop (symptom, evidence sources, falsifiable hypotheses, reproduction, instruments, before/after numbers, report).

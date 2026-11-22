@@ -70,6 +70,9 @@ Worth it with many front-end servers, state shared across servers or apps, data 
 - The `_API` module exposes REST endpoints that call BL/CS. It has no logic of its own, only authentication, mapping and auditing.
 - Adding a new method is fine in the current version. A new **optional** attribute is non-disruptive. A new **mandatory** attribute or a renamed or retyped attribute is **disruptive**: publish a new version (`/v2`), keep the old one if consumers can't move, and deprecate it.
 
+### Exposing logic to AI agents (`INT-07`)
+Apps can serve **MCP tools** to outside AI agents — built in-house or with a Forge component (a community "MCP Server" component exists for O11; it is not an OutSystems product). Treat every tool as an exposed API: an `_API`-level module that only calls BL, authentication per client, authorization per tool **and per record** on the server (the agent acts with someone's rights), strict input validation, rate limits, and an audit of each call. Expose the smallest useful set of read tools first; writes need the same use-case discipline as any client. Review a third-party component's code, maintenance and security model before production. This is different from the **Service Studio MCP**, which lets agents edit your modules at design time (`references/service-studio-mcp.md`).
+
 ## 7. Microservices in OutSystems
 - A standard installation already gives a service-oriented architecture. Real microservices (a separate infrastructure per service, REST only) lose RAD: no shared entities or aggregates, and no shared blocks.
 - If you adopt them, build **Extended Services** on the consumer side: a local cache, blocks and composite logic over the REST API.

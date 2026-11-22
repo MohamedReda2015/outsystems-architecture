@@ -86,6 +86,14 @@ When a pipeline or an AI agent prepares deployments, use the **LifeTime Deployme
 - **Guardrails for agents**: a configured list of forbidden targets (Pre-Production, Production) that the agent refuses; the agent never publishes modules, never deletes plans, versions or applications, and starts a plan only after the user says so.
 - LifeTime shows server time; the API returns UTC.
 
+### Traditional Web → Reactive migration (`MNT-09`)
+Service Studio has a GA **Convert to Reactive** option (Module › Convert to Reactive; latest Service Studio): it clones the module and converts the clone, automating the mechanical part of recreating UI, logic and data structures. OutSystems reports 30–60 % less manual work.
+1. Convert **producers before consumers** (Foundation and Core before End-User), so each converted consumer references converted producers.
+2. Clean up each clone: screen preparations → aggregates and data actions; session variables → client variables (non-sensitive only) or server state; Traditional widgets and themes → OutSystems UI patterns and the Reactive theme (style guide); JavaScript reviewed against the frontend rules.
+3. **Security review**: every server action, aggregate and data action the Reactive UI calls is now a REST endpoint (`SEC-01`): add role and record checks that the Traditional server-side rendering never needed.
+4. Retest every journey per role; compare performance before and after.
+The official O11 MCP skill has a cleanup reference for converted modules; agents follow it for the model edits.
+
 ## 7. Hotfix SOP
 1. Reproduce the problem in the environment that matches Production (Pre-Prod, or QA restored to the Production version).
 2. Apply the fix there, on the Production code line. Never ship untested Dev work along with it.
