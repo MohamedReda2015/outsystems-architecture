@@ -38,6 +38,8 @@ An app sits in the layer of its highest module. One owner and one sponsor per ap
 - Pass Structures with only the needed fields.
 - Filter soft-deleted rows in every query.
 - No server calls in client events; one server call per user action.
+- Diagnose before fixing: exact symptom and environment, evidence, one falsifiable hypothesis at a time, read-only until the fix is asked for.
+- Automated deployments: LifeTime API with a service-account token in an environment variable; one plan per run; agents never deploy to Pre-Production/Production, never publish modules.
 - Timers: `Timer_` prefix, batches, logical timeout, commit, re-wake, kill switch.
 - Max. Records / `TOP`; `List.Empty`.
 - Large text and binary data in extension entities.

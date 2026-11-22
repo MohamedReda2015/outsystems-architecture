@@ -1,21 +1,23 @@
 # Changelog
 
-## Unreleased — cross-skill delivery review (2026-11-22)
+All notable changes to this skill. Versions follow [semantic versioning](https://semver.org/) of `metadata.version` in `SKILL.md`.
 
+## 2.1.0 — 2026-11-22
+Ideas adopted, after review, from a third-party OutSystems skills collection (maiurnarendra/outsystems-ai-skills, MIT; paraphrased).
+- New `references/debugging.md` and rule `OPS-09`: diagnosis loop (symptom, evidence sources, falsifiable hypotheses, reproduction, instruments, before/after numbers, report).
+- New rule `OPS-08` and `lifecycle-and-sop.md` §6 "Deploying through the LifeTime API": service-account token, apps not modules, tagging, one plan per run, conflicts and outdated consumers, stale plans, agent guardrails.
+- Reference map and adapters updated.
+
+### Also in this release: cross-skill delivery review (2026-11-22)
 - Connected requirements, domain implementation and runtime evidence through stable IDs and versioned handoffs.
 - Added domain acceptance guidance, template evidence fields and sourced review checks.
 
-
-## Unreleased — reliability review (2026-11-22)
-
+### Also in this release: reliability review (2026-11-22)
 - Clarified platform facts versus house/project conventions and verification evidence.
 - Added domain-specific reliability guidance, source provenance and acceptance cases.
 - Added review/template checks and corrected over-broad or inconsistent claims.
 - Added typed dependency validation, coverage reporting and Python/Node behavioral regression checks in CI.
 - Extended repository consistency checks to the new reliability rule IDs and aligned contributor guidance with the full checkout.
-
-
-All notable changes to this skill. Versions follow [semantic versioning](https://semver.org/) of `metadata.version` in `SKILL.md`.
 
 ## 2.0.0 — 2026-11-22
 **Breaking: the skill is renamed** from `outsystems-standards` to **`outsystems-architecture`** (display title "OutSystems-Architecture").

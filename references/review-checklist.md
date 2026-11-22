@@ -146,6 +146,8 @@ Every rule has an ID, a severity and a check. Cite the ID in findings. The IDs s
 | OPS-05 | Minor | Per-environment values (site properties, endpoints, timers) are documented in the deployment notes |
 | OPS-06 | Minor | Definition of Done met (review, tests, Code Quality clean, unused dependencies removed) |
 | OPS-07 | Minor | One user per developer; the same Service Studio version across the team |
+| OPS-08 | Major | Automated or agent-driven deployments use the LifeTime Deployment API with a service-account token kept in an environment variable (never printed or committed); one plan per run with work-item keys as notes; untagged changes tagged first; plan conflicts and outdated consumers checked before start; agents never deploy to forbidden targets (Pre-Production, Production), never publish modules and never delete plans, versions or apps |
+| OPS-09 | Major | Defects and slowness are diagnosed before fixing: exact symptom and environment captured, evidence from logs and the model, one falsifiable hypothesis at a time, reproduction in Development, temporary instruments removed, before/after numbers for performance (`references/debugging.md`) |
 
 ## TST — Testing
 | ID | Sev | Rule |

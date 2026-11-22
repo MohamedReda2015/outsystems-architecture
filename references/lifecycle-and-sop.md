@@ -76,6 +76,16 @@ Discuss the result with the author. The goal is shared knowledge, not blame. Ask
 5. After deployment, set the per-environment values, run the data scripts, check timers, then smoke-test and watch the error logs.
 6. Rollback: LifeTime can redeploy an earlier tagged version. A **forward fix (hotfix)** is usually less risky than a rollback, because data and schema may already have changed.
 
+### Deploying through the LifeTime API (`OPS-08`)
+When a pipeline or an AI agent prepares deployments, use the **LifeTime Deployment API (v2)** instead of clicking through LifeTime:
+- **Credentials**: a LifeTime **service account** token in an environment variable; never printed, logged, pasted into chat or committed.
+- **Scope**: map the changed modules to their **applications** (LifeTime deploys applications); tag applications with untagged changes ("+" after the version) with the next version before planning.
+- **One plan per run**, each application once, with the work-item keys as the plan notes.
+- **Before starting**: read the plan's conflicts and the consumers it would leave outdated; if a dependency application carries someone else's untagged changes, ask — don't add it silently.
+- **Starting**: one deployment runs per target environment at a time; a rejected start with nothing else running usually means the saved plan is stale — create a fresh plan with the same versions and notes.
+- **Guardrails for agents**: a configured list of forbidden targets (Pre-Production, Production) that the agent refuses; the agent never publishes modules, never deletes plans, versions or applications, and starts a plan only after the user says so.
+- LifeTime shows server time; the API returns UTC.
+
 ## 7. Hotfix SOP
 1. Reproduce the problem in the environment that matches Production (Pre-Prod, or QA restored to the Production version).
 2. Apply the fix there, on the Production code line. Never ship untested Dev work along with it.
@@ -84,6 +94,8 @@ Discuss the result with the author. The goal is shared knowledge, not blame. Ask
 5. Record the root cause, and add a lesson or checklist rule if needed.
 
 ## 8. Testing strategy
+Diagnosing a defect before fixing it: `references/debugging.md` (`OPS-09`).
+
 - **Test pyramid**: many fast server-side tests, fewer integration or API tests, few UI end-to-end tests.
 - **BDDFramework** (Forge, O11):
   - Scenarios are written as Given-When-Then and test **server-side logic** through public server actions.

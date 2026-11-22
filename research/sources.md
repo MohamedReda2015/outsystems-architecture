@@ -28,6 +28,7 @@ Read 2026-11-22. **O** = official OutSystems documentation or OutSystems-owned; 
 | Forum: hotfix placement, rollback vs forward fix | https://www.outsystems.com/forums/discussion/99733/where-to-apply-hotfix/ · https://www.outsystems.com/forums/discussion/15466/ | lifecycle-and-sop |
 | Forum: module naming cheat sheet | https://www.outsystems.com/forums/discussion/59771/cheat-sheet-outsystems-module-naming-convention/ | module-standard |
 | Accessibility (OutSystems UI, WCAG 2.1 AA; EAA) | https://www.outsystems.com/blog/posts/outsystems-ui-digital-accessibility/ · https://www.outsystems.com/legal/european-accessibility-act/ | ui-standards |
+| maiurnarendra/outsystems-ai-skills v0.14.1 (GitHub, MIT, reviewed 2026-11-22): debugging, lifetime-deploy | https://github.com/maiurnarendra/outsystems-ai-skills | debugging, lifecycle-and-sop (OPS-08, OPS-09) |
 
 ## Not verified / open
 - The full text of the official "Apply a hotfix" and "Deployment plans" pages was not retrieved. The hotfix SOP is based on official best-practice bullets and community threads.

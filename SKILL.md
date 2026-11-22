@@ -3,7 +3,7 @@ name: outsystems-architecture
 description: Design, review and evolve OutSystems 11 application architecture, module boundaries, dependencies, deployment and verification. Distinguishes official Architecture Canvas rules from the house FE/CW/BL/CS pattern. Use for O11 architecture or cross-module changes; use domain skills for implementation details and ODC guidance for ODC.
 license: MIT
 metadata:
-  version: 2.0.0
+  version: 2.1.0
   updated: "2026-11-22"
   platform: OutSystems 11 (Reactive Web, Mobile, Traditional Web)
   agent-independent: "true"
@@ -172,6 +172,7 @@ Follow `references/lifecycle-and-sop.md` and the project release policy: LifeTim
 | `references/domain-driven-and-scale.md` | large factories, many teams, domains, microservices, multi-tenant, mobile with many teams |
 | `references/code-quality-patterns.md` | interpreting or predicting Code Quality (AI Mentor Studio) and Discovery findings |
 | `references/lifecycle-and-sop.md` | environments, LifeTime, deployments, hotfixes, Definition of Done, code review, testing, CI/CD |
+| `references/debugging.md` | diagnosing an error, slowness or front-end issue before fixing it |
 | `references/lessons-learned.md` | before any real build: mistakes already made once |
 | `references/service-studio-mcp.md` | editing modules through the Service Studio MCP / Model API |
 | `references/review-checklist.md` | any review or "is this correct?" question |
