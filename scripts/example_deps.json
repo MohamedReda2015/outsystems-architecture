@@ -1,0 +1,11 @@
+{
+  "modules": [
+    {"name": "Orders_Th",        "app": "Orders",       "references": ["OutSystemsUI"]},
+    {"name": "Orders_Front_End", "app": "Orders",       "references": ["Orders_CW", "Orders_Th", "OutSystemsUI"]},
+    {"name": "Orders_CW",        "app": "Orders",       "references": ["Orders_BL", "OutSystemsUI"]},
+    {"name": "Orders_BL",        "app": "Orders",       "references": ["Orders_CS", "Sms_IS", "Audit_Lib"]},
+    {"name": "Orders_CS",        "app": "Orders",       "references": ["Audit_Lib"]},
+    {"name": "Sms_IS",           "app": "Integrations", "references": []},
+    {"name": "Audit_Lib",        "app": "Integrations", "references": []}
+  ]
+}

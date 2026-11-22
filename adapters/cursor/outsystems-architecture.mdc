@@ -1,0 +1,12 @@
+---
+description: OutSystems 11 architecture standards (3-layer canvas, FE->CW->BL->CS), naming, data/logic/UI/performance/security rules. Apply when designing, building or reviewing OutSystems modules.
+globs:
+alwaysApply: false
+---
+
+Follow the OutSystems standards skill in `outsystems-architecture/` (copy that folder into the repository, or adjust the path).
+
+1. Read `outsystems-architecture/SKILL.md` first. Load only the `references/*.md` files the task needs.
+2. The core rules in `outsystems-architecture/adapters/core-rules.md` are always in force.
+3. For reviews, cite rule IDs from `references/review-checklist.md`, and run `python outsystems-architecture/scripts/validate_architecture.py <deps.json> --strict` when a dependency export is available.
+4. Use the templates in `outsystems-architecture/templates/` for blueprints, build reports and review reports.

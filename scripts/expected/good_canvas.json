@@ -1,0 +1,26 @@
+{
+  "summary": {
+    "modules": 7,
+    "applications": 2,
+    "strict": false,
+    "counts": {
+      "Blocker": 0,
+      "Major": 0,
+      "Minor": 0
+    },
+    "layers": {
+      "Audit_Lib": "foundation",
+      "Orders_BL": "core",
+      "Orders_CS": "core",
+      "Orders_CW": "core",
+      "Orders_Front_End": "end-user",
+      "Orders_Th": "foundation",
+      "Sms_IS": "foundation"
+    },
+    "application_layers": {
+      "Integrations": "foundation",
+      "Orders": "end-user"
+    }
+  },
+  "findings": []
+}

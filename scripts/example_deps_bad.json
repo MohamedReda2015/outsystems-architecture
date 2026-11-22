@@ -1,0 +1,13 @@
+{
+  "modules": [
+    {"name": "Portal",        "app": "Portal",  "references": ["Claims_FE", "Customer_CS"]},
+    {"name": "Claims_FE",     "app": "Claims",  "references": ["Claims_BL", "Claims_CS"]},
+    {"name": "Claims_CW",     "app": "Claims",  "references": ["Claims_CS"]},
+    {"name": "Claims_BL",     "app": "Claims",  "references": ["Claims_CS", "Customer_CS"]},
+    {"name": "Claims_CS",     "app": "Claims",  "references": ["Claims_Sync"]},
+    {"name": "Claims_Sync",   "app": "Claims",  "references": []},
+    {"name": "Customer_CS",   "app": "Portal",  "references": ["Policy_CS"]},
+    {"name": "Policy_CS",     "app": "Claims",  "references": ["Customer_CS"]},
+    {"name": "Format_Lib",    "app": "Common",  "references": ["Claims_BL"]}
+  ]
+}

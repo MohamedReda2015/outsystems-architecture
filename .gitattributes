@@ -1,0 +1,15 @@
+* text=auto eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.mdc text eol=lf
+
+# Keep repository plumbing out of the packaged skill (git archive / release zip)
+.github/        export-ignore
+.gitattributes  export-ignore
+.gitignore      export-ignore
+scripts/expected/ export-ignore
+scripts/test_validator.mjs export-ignore
+scripts/check_skill.mjs export-ignore

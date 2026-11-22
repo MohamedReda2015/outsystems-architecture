@@ -1,0 +1,95 @@
+{
+  "summary": {
+    "modules": 9,
+    "applications": 3,
+    "strict": true,
+    "counts": {
+      "Blocker": 2,
+      "Major": 10,
+      "Minor": 1
+    },
+    "layers": {
+      "Claims_BL": "core",
+      "Claims_CS": "core",
+      "Claims_CW": "core",
+      "Claims_FE": "end-user",
+      "Claims_Sync": "core",
+      "Customer_CS": "core",
+      "Format_Lib": "foundation",
+      "Policy_CS": "core",
+      "Portal": "end-user"
+    },
+    "application_layers": {
+      "Claims": "end-user",
+      "Common": "foundation",
+      "Portal": "end-user"
+    }
+  },
+  "findings": [
+    {
+      "rule": "ARC-01",
+      "severity": "Blocker",
+      "message": "Upward reference: Format_Lib (foundation) -> Claims_BL (core). Move the consumed element to a lower layer."
+    },
+    {
+      "rule": "ARC-02",
+      "severity": "Blocker",
+      "message": "Side reference between End-User modules: Portal -> Claims_FE. Move the shared element to Core (business) or a Library (agnostic)."
+    },
+    {
+      "rule": "ARC-03",
+      "severity": "Major",
+      "message": "Cycle between modules: Customer_CS <-> Policy_CS. Move elements, merge, or add a composition module on top."
+    },
+    {
+      "rule": "ARC-04",
+      "severity": "Major",
+      "message": "Cycle between applications: Claims <-> Portal (they must be deployed together)."
+    },
+    {
+      "rule": "ARC-04",
+      "severity": "Major",
+      "message": "Side reference between End-User apps: Claims -> Portal. Move the shared modules (and their dependencies) into a Core app."
+    },
+    {
+      "rule": "ARC-04",
+      "severity": "Major",
+      "message": "Side reference between End-User apps: Portal -> Claims. Move the shared modules (and their dependencies) into a Core app."
+    },
+    {
+      "rule": "ARC-04",
+      "severity": "Major",
+      "message": "Upward application reference: Common (foundation app) -> Claims (end-user app). Move the shared modules (and their dependencies) into a Core/Foundation app."
+    },
+    {
+      "rule": "ARC-10",
+      "severity": "Major",
+      "message": "Core sublayer violation: Claims_CS (core service) -> Claims_Sync (_SYNC). A CS must not depend on BL/CW/API/Sync/Eng; move the consumed element down into a CS."
+    },
+    {
+      "rule": "HSE-03",
+      "severity": "Major",
+      "message": "House standard: Claims_CW (CW) -> Claims_CS (CS): blocks must go through BL Service Actions, not CS."
+    },
+    {
+      "rule": "HSE-03",
+      "severity": "Major",
+      "message": "House standard: Claims_FE (FE) -> Claims_BL (BL): screens must consume CW blocks only."
+    },
+    {
+      "rule": "HSE-03",
+      "severity": "Major",
+      "message": "House standard: Claims_FE (FE) -> Claims_CS (CS): screens must not touch CS entities/CRUD."
+    },
+    {
+      "rule": "HSE-03",
+      "severity": "Major",
+      "message": "House standard: Portal (FE) -> Customer_CS (CS): screens must not touch CS entities/CRUD."
+    },
+    {
+      "rule": "ARC-07",
+      "severity": "Minor",
+      "message": "Portal: no canvas suffix; assumed End-User. Add a suffix or an explicit \"layer\"."
+    }
+  ]
+}
